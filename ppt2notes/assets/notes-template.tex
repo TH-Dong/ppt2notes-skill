@@ -1,0 +1,368 @@
+% !TEX program = xelatex
+% PPT2Notes LaTeX Template
+% 建议保存为 assets/notes-template.tex，并使用 XeLaTeX / latexmk -xelatex 编译。
+
+\documentclass[UTF8,zihao=-4]{ctexart}
+
+% ---------- Page layout ----------
+\usepackage[a4paper,left=22mm,right=22mm,top=24mm,bottom=26mm]{geometry}
+\usepackage{setspace}
+\linespread{1.16}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.18em}
+
+% ---------- Math / tables / figures ----------
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xparse}
+
+% ---------- Colors ----------
+\usepackage{xcolor}
+\definecolor{NoteInk}{HTML}{1F2933}
+\definecolor{NoteMuted}{HTML}{6B7280}
+\definecolor{NoteRule}{HTML}{D7DEE8}
+\definecolor{NoteAccent}{HTML}{2563A9}
+\definecolor{NoteAccentDeep}{HTML}{174A7C}
+\definecolor{NoteBlueBack}{HTML}{F3F8FF}
+\definecolor{NoteBlueFrame}{HTML}{A9C7E8}
+\definecolor{NoteGrayBack}{HTML}{F7F8FA}
+\definecolor{CodeBack}{HTML}{F6F8FA}
+
+% ---------- Hyperlinks ----------
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=NoteAccentDeep,
+  urlcolor=NoteAccentDeep,
+  citecolor=NoteAccentDeep
+}
+
+% ---------- Header / footer ----------
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{NoteMuted}\CourseName}
+\fancyhead[R]{\small\color{NoteMuted}\SlideDeckTitle}
+\fancyfoot[C]{\small\color{NoteMuted}\thepage\,/\,\pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% ---------- Section style ----------
+\usepackage{titlesec}
+\titleformat{\section}
+  {\Large\bfseries\color{NoteInk}}
+  {\thesection}{0.75em}{}
+\titleformat{\subsection}
+  {\large\bfseries\color{NoteInk}}
+  {\thesubsection}{0.65em}{}
+\titleformat{\subsubsection}
+  {\normalsize\bfseries\color{NoteInk}}
+  {\thesubsubsection}{0.55em}{}
+\titlespacing*{\section}{0pt}{1.35em}{0.65em}
+\titlespacing*{\subsection}{0pt}{1.00em}{0.45em}
+\titlespacing*{\subsubsection}{0pt}{0.75em}{0.30em}
+
+% ---------- Lists ----------
+\setlist[itemize]{leftmargin=2.1em,itemsep=0.20em,topsep=0.25em}
+\setlist[enumerate]{leftmargin=2.2em,itemsep=0.20em,topsep=0.25em}
+
+% ---------- Captions ----------
+\captionsetup{
+  font=small,
+  labelfont=bf,
+  textfont=small,
+  labelsep=quad,
+  justification=centering
+}
+
+% ---------- TColorBox ----------
+\usepackage[most]{tcolorbox}
+\tcbset{
+  enhanced,
+  breakable,
+  sharp corners=south,
+  arc=2mm,
+  boxrule=0.45pt,
+  left=7pt,
+  right=7pt,
+  top=6pt,
+  bottom=6pt,
+  before skip=0.65em,
+  after skip=0.65em
+}
+
+% PPT-derived structure summary. Use this for the opening knowledge map.
+\newtcolorbox{structurebox}[1][本节知识体系]{
+  colback=NoteGrayBack,
+  colframe=NoteRule,
+  coltitle=NoteInk,
+  fonttitle=\bfseries,
+  title={#1}
+}
+
+% AI supplemental explanation. All non-slide explanations, examples, or extensions go here.
+\newtcolorbox{aiexplainbox}[1][补充理解]{
+  colback=NoteBlueBack,
+  colframe=NoteBlueFrame,
+  coltitle=NoteAccentDeep,
+  fonttitle=\bfseries,
+  title={#1}
+}
+
+% A quiet note box for local comparisons that are still slide-based.
+\newtcolorbox{notebox}[1][局部整理]{
+  colback=white,
+  colframe=NoteRule,
+  coltitle=NoteInk,
+  fonttitle=\bfseries,
+  title={#1}
+}
+
+% Worked-example box for math, algorithm, or problem-solving walk-throughs.
+% Use this whenever a worked problem needs a clear thought process.
+\newtcolorbox{examplebox}[1][Example]{
+  colback=NoteGrayBack,
+  colframe=NoteAccent,
+  coltitle=white,
+  fonttitle=\bfseries,
+  title={#1},
+  left=8pt,
+  right=8pt,
+  top=5pt,
+  bottom=5pt
+}
+
+% ---------- Code style ----------
+\usepackage{listings}
+\definecolor{CodeFrame}{HTML}{E1E6EC}
+\definecolor{CodeKw}{HTML}{174A7C}
+\definecolor{CodeStr}{HTML}{2E7D32}
+\definecolor{CodeCmt}{HTML}{8A929B}
+\definecolor{CodeNum}{HTML}{B0B7BF}
+\lstdefinestyle{notecode}{
+  backgroundcolor=\color{CodeBack},
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\bfseries\color{CodeKw},
+  commentstyle=\itshape\color{CodeCmt},
+  stringstyle=\color{CodeStr},
+  numbers=left,
+  numberstyle=\scriptsize\color{CodeNum},
+  stepnumber=1,
+  numbersep=6pt,
+  frame=leftline,
+  framerule=1pt,
+  rulecolor=\color{NoteAccent},
+  framesep=6pt,
+  xleftmargin=12pt,
+  xrightmargin=4pt,
+  aboveskip=0.55em,
+  belowskip=0.55em,
+  breaklines=true,
+  breakatwhitespace=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  tabsize=2,
+  captionpos=b,
+  abovecaptionskip=2pt,
+  belowcaptionskip=0pt
+}
+\lstset{style=notecode}
+\renewcommand{\lstlistingname}{代码}
+
+% ---------- Figure helper ----------
+% Usage: \notefigure[0.72]{figures/slide_08_geometry_model.png}{几何模型示意图}
+\NewDocumentCommand{\notefigure}{O{0.72} m m}{%
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=#1\linewidth]{#2}
+    \caption{#3}
+  \end{figure}
+}
+
+% ---------- Metadata ----------
+\newcommand{\CourseName}{课程名称}
+\newcommand{\SlideDeckTitle}{PPT 标题}
+\newcommand{\NoteTitle}{课程笔记标题}
+\newcommand{\NoteSubtitle}{基于 PPT/PDF 的图文整理笔记}
+\newcommand{\NoteAuthor}{InkTH}
+\newcommand{\NoteDate}{\today}
+
+% ---------- Title page ----------
+\newcommand{\makenotetitle}{%
+\begin{titlepage}
+  \thispagestyle{empty}
+  \vspace*{18mm}
+  \noindent{\Large\bfseries\color{NoteAccentDeep}\CourseName}\par
+  \vspace{9mm}
+  \noindent{\Huge\bfseries\color{NoteInk}\NoteTitle}\par
+  \vspace{4mm}
+  \noindent{\Large\color{NoteMuted}\NoteSubtitle}\par
+  \vspace{13mm}
+  \noindent\rule{0.56\linewidth}{0.6pt}\par
+  \vspace{7mm}
+  \noindent{\normalsize\color{NoteMuted}原始课件：\SlideDeckTitle}\par
+  \vspace{2mm}
+  \noindent{\normalsize\color{NoteMuted}整理者：\NoteAuthor}\par
+  \vspace{2mm}
+  \noindent{\normalsize\color{NoteMuted}日期：\NoteDate}\par
+  \vfill
+  \begin{aiexplainbox}[阅读说明]
+  黑色正文表示来自 PPT/PDF 的原始内容、轻微同义改写或忠实结构整理；本浅蓝色提示框表示 AI 为辅助理解而加入的解释、例子或少量拓展。补充内容只服务于当前知识点，不替代原课件内容。
+  \end{aiexplainbox}
+\end{titlepage}
+}
+
+\begin{document}
+
+\makenotetitle
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{本节知识体系}
+% ============================================================
+
+\begin{structurebox}
+这里先用一段紧凑文字说明本份 PPT 的主线：它围绕什么问题展开，先讲什么基础概念，再引出什么方法、模型、流程或应用，最后落到什么结论或能力。
+
+\begin{itemize}
+  \item 第一层：本节要解决的核心问题。
+  \item 第二层：支撑这个问题的关键概念、定义或背景。
+  \item 第三层：PPT 展开的主要方法、流程、公式、图示或案例。
+  \item 第四层：几个知识点之间的关系，而不是简单复述 PPT 标题。
+\end{itemize}
+\end{structurebox}
+
+% ============================================================
+\section{知识点一：填写 PPT 中的核心主题}
+% ============================================================
+
+这里写基于 PPT/PDF 的正文内容。正文应保持黑色，表示它来自课件原文、轻微同义改写或忠实整理。允许把相邻内容做小范围顺序调整，但不要改变 PPT 的内容边界。
+
+\subsection{概念与作用}
+
+这里说明该知识点在本节 PPT 中承担的作用。不要空泛总结，要尽量落到 PPT 中出现的术语、图示、公式或流程。
+
+\begin{aiexplainbox}[直觉解释]
+当 PPT 对某个概念讲得过于简略、符号突然出现，或者图示关系不容易直接看懂时，在这里补充必要解释。补充内容可以来自常识、教材背景或合理例子，但必须紧贴当前知识点，不能扩展成独立章节。
+\end{aiexplainbox}
+
+\subsection{图示与结构}
+
+如果 PPT 中存在帮助理解的图、流程图、UML 图、算法可视化、数学图示或遥感影像示意，应裁剪关键区域后插入。图片文件名可以保留 slide 编号，但正文不显示页码来源。
+
+% 示例：取消注释后使用
+% \notefigure[0.86]{figures/slide_08_example.png}{图示标题：说明这张图支撑哪个知识点}
+
+% ============================================================
+\section{知识点二：填写 PPT 中的下一个主题}
+% ============================================================
+
+这里继续按照 PPT 的知识点推进。若 PPT 的顺序在局部上不利于理解，可以在不改变内容范围的前提下调整相邻知识点顺序。
+
+\subsection{公式或模型}
+
+当 PPT 中出现公式时，先说明公式解决什么问题，再给出公式。若 PPT 已经解释充分，不需要额外扩展；若 PPT 只给出公式而缺少符号解释，可使用浅蓝框补充。
+
+\[
+  y = f(x)
+\]
+
+\begin{aiexplainbox}[符号说明]
+这里解释公式中每个符号的含义、输入输出关系，以及它为什么会出现在当前 PPT 逻辑中。不要加入长推导，除非 PPT 的理解确实依赖该步骤。
+\end{aiexplainbox}
+
+\subsection{算法或流程}
+
+若 PPT 中出现算法、处理流程或操作步骤，可以整理为紧凑步骤。若原 PPT 已经有伪代码，应尽量保留原意。
+
+\begin{enumerate}
+  \item 第一步：说明输入或初始状态。
+  \item 第二步：说明关键处理过程。
+  \item 第三步：说明输出、结果或判断条件。
+\end{enumerate}
+
+\begin{aiexplainbox}[关键变量解释]
+如果算法中的变量、状态转移、循环条件或边界情况不容易理解，在这里补充解释。补充以理解当前算法为限，不默认扩展复杂度分析或其他算法变体。
+\end{aiexplainbox}
+
+% ============================================================
+\section{代码片段}
+% ============================================================
+
+理工科课程中（如算法设计、数据结构、数据库、面向对象等），应直接呈现关键代码，而不是用文字描述代码。仅展示与当前知识点相关的核心几行，省略无关的框架与样板。每段代码必须包含精炼的必要注释，解释非显然的变量用途、循环不变式、边界条件或操作意图。
+
+\begin{lstlisting}[language=C++,caption={核心逻辑：快速排序的划分过程}]
+int partition(int a[], int lo, int hi) {
+    int pivot = a[hi], i = lo - 1;  // pivot 为枢轴，i 指向 ≤pivot 区域右边界
+    for (int j = lo; j < hi; ++j)
+        if (a[j] <= pivot) std::swap(a[++i], a[j]);  // 将 ≤pivot 元素交换到左侧
+    std::swap(a[i + 1], a[hi]);  // 枢轴归位
+    return i + 1;
+}
+\end{lstlisting}
+
+\begin{aiexplainbox}[Explanation]
+仅当代码的不变式、关键变量或边界条件不明显时，才补充一段说明。不要逐行翻译代码。
+\end{aiexplainbox}
+
+% ============================================================
+\section{例题与思维过程}
+% ============================================================
+
+对于算法、数学、推导类课程，当 PPT 给出题目时，应在 \texttt{examplebox} 中完整呈现思考过程。题目条件、关键思路、推导步骤、最终答案缺一不可。
+
+\begin{examplebox}[Example]
+\textbf{题目.} 完整复述 PPT 中的题目条件。
+
+\textbf{思路.} 一两句话点明关键观察或所属方法。
+
+\textbf{推导.}
+\begin{enumerate}
+  \item 第一步及其依据；
+  \item 第二步的代入或变形；
+  \item 逼近答案的最后一步。
+\end{enumerate}
+
+\[
+  \text{关键中间式} \;\Rightarrow\; \text{下一式}
+\]
+
+\textbf{答案.} 给出最终结果，必要时附一句意义或边界检查。
+\end{examplebox}
+
+% ============================================================
+\section{局部对比或整理}
+% ============================================================
+
+只有当 PPT 中的内容本身存在明显对比关系，或者不对比就很难理解时，才加入局部对比表。不要默认生成名词解释表、题型预测、易错点总表或考试答案模板。
+
+\begin{notebox}[局部对比]
+\begin{tabularx}{\linewidth}{>{\bfseries}p{0.20\linewidth}X X}
+\toprule
+对比项 & A & B \\
+\midrule
+含义 & 根据 PPT 填写 & 根据 PPT 填写 \\
+作用 & 根据 PPT 填写 & 根据 PPT 填写 \\
+区别 & 根据 PPT 填写 & 根据 PPT 填写 \\
+\bottomrule
+\end{tabularx}
+\end{notebox}
+
+% ============================================================
+\section{结尾整理}
+% ============================================================
+
+如果 PPT 本身有明确小结，可以忠实整理。若 PPT 没有小结，不要强行写空泛总结。可以用几句话收束本份 notes 的主线，但不要加入题型预测或无来源结论。
+
+\end{document}
