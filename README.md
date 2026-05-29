@@ -43,16 +43,7 @@
 把这个仓库中的 `ppt2notes/` 目录放到 Codex skills 目录下即可：
 
 ```bash
-mkdir -p ~/.codex/skills
-cp -R ./ppt2notes ~/.codex/skills/
-```
-
-安装后，Skill 会以 `ppt2notes` 被发现。
-
-也可以直接从你发布后的 GitHub 仓库拉取：
-
-```bash
-git clone <your-repo-url>
+git clone https://github.com/TH-Dong/ppt2notes-skill.git
 cp -R ./ppt2notes-skill/ppt2notes ~/.codex/skills/
 ```
 
