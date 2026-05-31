@@ -74,5 +74,4 @@ cp -R ./ppt2notes-skill/ppt2notes ~/.codex/skills/
 
 - Skill 主规范见 [`ppt2notes/SKILL.md`](./ppt2notes/SKILL.md)
 - LaTeX 模板见 [`ppt2notes/assets/notes-template.tex`](./ppt2notes/assets/notes-template.tex)
-- 发布步骤见 [`docs/publish.md`](./docs/publish.md)
 - 本仓库默认使用 [`MIT License`](./LICENSE)
